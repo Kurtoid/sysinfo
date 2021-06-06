@@ -346,6 +346,7 @@ mod test {
         } else {
             assert!(s.get_processors().is_empty());
         }
+        assert!(s.get_physical_core_count().unwrap_or(0) <= s.get_processors().len());
     }
 }
 
