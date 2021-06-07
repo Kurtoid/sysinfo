@@ -75,6 +75,7 @@ impl fmt::Debug for Process {
             .field("status", &self.status())
             .field("root", &self.root())
             .field("disk_usage", &self.disk_usage())
+            .field("total_runtime", &self.total_runtime())
             .finish()
     }
 }
