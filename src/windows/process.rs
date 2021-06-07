@@ -437,7 +437,8 @@ impl ProcessExt for Process {
     }
 
     fn total_runtime(&self) -> u64 {
-        unimplemented!("total_runtime not implemented");
+        compile_warning!("total runtime is not implemented on Windows!");
+        0
     }
 }
 
