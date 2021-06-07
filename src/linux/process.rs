@@ -127,6 +127,7 @@ pub struct Process {
     old_written_bytes: u64,
     read_bytes: u64,
     written_bytes: u64,
+    total_runtime: u64,
 }
 
 impl ProcessExt for Process {
@@ -162,6 +163,7 @@ impl ProcessExt for Process {
             old_written_bytes: 0,
             read_bytes: 0,
             written_bytes: 0,
+            total_runtime: 0,
         }
     }
 
@@ -265,6 +267,11 @@ impl ProcessExt for Process {
             total_read_bytes: self.read_bytes,
         }
     }
+
+    // using https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat
+    fn total_runtime(&self) -> u64 {
+        self.total_runtime
+    }
 }
 
 impl Drop for Process {
@@ -294,6 +301,11 @@ pub fn set_time(p: &mut Process, utime: u64, stime: u64) {
     p.utime = utime;
     p.stime = stime;
     p.updated = true;
+}
+pub fn set_runtime(p: &mut Process, utime: u64, stime: u64, clock_tick: u64) {
+    let total_ticks = utime + stime;
+    p.total_runtime = total_ticks / clock_tick;
+
 }
 
 pub fn has_been_updated(p: &Process) -> bool {

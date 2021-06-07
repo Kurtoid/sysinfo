@@ -257,6 +257,10 @@ impl ProcessExt for Process {
             total_written_bytes: self.written_bytes,
         }
     }
+
+    fn total_runtime(&self) -> u64 {
+        unimplemented!("total_runtime is not implemented");
+    }
 }
 
 pub(crate) fn compute_cpu_usage(

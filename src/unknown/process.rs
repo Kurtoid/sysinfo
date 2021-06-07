@@ -83,4 +83,8 @@ impl ProcessExt for Process {
     fn disk_usage(&self) -> DiskUsage {
         DiskUsage::default()
     }
+
+    fn total_runtime(&self) -> u64 {
+        0
+    }
 }

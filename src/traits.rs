@@ -323,6 +323,9 @@ pub trait ProcessExt: Debug {
     /// }
     /// ```
     fn disk_usage(&self) -> DiskUsage;
+
+    /// Returns the number of seconds of CPU time used by this task
+    fn total_runtime(&self) -> u64;
 }
 
 /// Contains all the methods of the [`Processor`][crate::Processor] struct.

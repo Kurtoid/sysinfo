@@ -435,6 +435,10 @@ impl ProcessExt for Process {
             total_read_bytes: self.read_bytes,
         }
     }
+
+    fn total_runtime(&self) -> u64 {
+        unimplemented!("total_runtime not implemented");
+    }
 }
 
 impl Drop for Process {

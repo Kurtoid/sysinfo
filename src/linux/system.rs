@@ -681,6 +681,7 @@ fn update_time_and_memory(
     pid: Pid,
     uptime: u64,
     now: u64,
+    clock_tick: u64,
 ) {
     {
         // rss
@@ -696,8 +697,15 @@ fn update_time_and_memory(
         set_time(
             entry,
             u64::from_str(parts[13]).unwrap_or(0),
-            u64::from_str(parts[14]).unwrap_or(0),
+            u64::from_str(parts[14]).unwrap_or(0)
         );
+        set_runtime(
+            entry,
+            u64::from_str(parts[13]).unwrap_or(0),
+            u64::from_str(parts[14]).unwrap_or(0),
+            clock_tick,
+        )
+        
     }
     refresh_procs(entry, &path.join("task"), page_size_kb, pid, uptime, now);
 }
@@ -872,6 +880,7 @@ fn _get_process_data(
         _ => return Err(()),
     };
 
+    let clock_cycle = unsafe { sysconf(_SC_CLK_TCK) } as u64;
     let get_status = |p: &mut Process, part: &str| {
         p.status = part
             .chars()
@@ -904,6 +913,7 @@ fn _get_process_data(
             nb,
             uptime,
             now,
+            clock_cycle,
         );
         update_process_disk_activity(entry, path);
         return Ok((None, nb));
@@ -927,7 +937,6 @@ fn _get_process_data(
         }
     };
 
-    let clock_cycle = unsafe { sysconf(_SC_CLK_TCK) } as u64;
     let since_boot = u64::from_str(parts[21]).unwrap_or(0) / clock_cycle;
     let start_time = now.saturating_sub(uptime.saturating_sub(since_boot));
     let mut p = Process::new(nb, parent_pid, start_time);
@@ -989,6 +998,7 @@ fn _get_process_data(
         nb,
         uptime,
         now,
+        clock_cycle,
     );
     update_process_disk_activity(&mut p, path);
     Ok((Some(p), nb))
