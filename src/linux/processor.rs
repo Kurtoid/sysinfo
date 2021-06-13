@@ -196,6 +196,12 @@ impl Processor {
             self.cpu_usage = 100.; // to prevent the pourcentage to go above 100%
         }
     }
+
+    /// get the raw values from the CPU. linux only, for now
+    pub fn get_cpu_values(self) -> CpuValues{
+        self.new_values
+    }
+
 }
 
 impl ProcessorExt for Processor {
