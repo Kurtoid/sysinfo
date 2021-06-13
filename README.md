@@ -1,5 +1,7 @@
 # sysinfo ![img_github_ci] [![][img_crates]][crates] [![][img_doc]][doc]
 
+## linux-only fork that adds linux-specific details to CPU
+
 [img_github_ci]: https://github.com/GuillaumeGomez/sysinfo/workflows/CI/badge.svg
 [img_crates]: https://img.shields.io/crates/v/sysinfo.svg
 [img_doc]: https://img.shields.io/badge/rust-documentation-blue.svg
