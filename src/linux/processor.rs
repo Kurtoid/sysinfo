@@ -127,7 +127,7 @@ impl ProcessorExt for Processor {
     }
 
     fn get_system_percent(&self) -> f32{
-        &self.system_percent
+        self.system_percent
     }
 
 }
