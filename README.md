@@ -1,7 +1,5 @@
 # sysinfo ![img_github_ci] [![][img_crates]][crates] [![][img_doc]][doc]
 
-## linux-only fork that adds linux-specific details to CPU
-
 [img_github_ci]: https://github.com/GuillaumeGomez/sysinfo/workflows/CI/badge.svg
 [img_crates]: https://img.shields.io/crates/v/sysinfo.svg
 [img_doc]: https://img.shields.io/badge/rust-documentation-blue.svg
@@ -11,14 +9,7 @@
 
 A system handler to interact with processes.
 
-Supports the following platforms:
-
- * Linux
- * Raspberry Pi
- * Android
- * macOS
- * iOS
- * Windows
+## linux-only fork that adds linux-specific details to CPU
 
 The minimum-supported version of `rustc` is **1.45**.
 
