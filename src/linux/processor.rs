@@ -25,6 +25,7 @@ pub struct Processor {
     pub(crate) frequency: u64,
     pub(crate) vendor_id: String,
     pub(crate) brand: String,
+    system_percent: f32,
 }
 
 impl Processor {
@@ -56,6 +57,7 @@ impl Processor {
             frequency,
             vendor_id,
             brand,
+            system_percent: 0f32,
         }
     }
 
@@ -93,6 +95,12 @@ impl Processor {
         if self.cpu_usage > 100. {
             self.cpu_usage = 100.; // to prevent the pourcentage to go above 100%
         }
+        self.system_percent = min!(self.new_values.system, self.old_values.system)
+            / min!(self.total_time, self.old_total_time)
+            * 100.;
+        if self.system_percent > 100. {
+            self.system_percent = 100.; // to prevent the pourcentage to go above 100%
+        }
     }
 }
 
@@ -118,9 +126,8 @@ impl ProcessorExt for Processor {
         &self.brand
     }
 
-    /// get a copy of the raw values from the CPU. linux only, for now
-    fn get_cpu_values(&self) -> CpuValues{
-        self.new_values
+    fn get_system_percent(&self) -> f32{
+        &self.system_percent
     }
 
 }

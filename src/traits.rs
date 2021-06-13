@@ -496,8 +496,9 @@ pub trait ProcessorExt: Debug {
     /// ```
     fn get_frequency(&self) -> u64;
 
-    /// get the raw values from the CPU. linux only, for now
-    fn get_cpu_values(&self) -> CpuValues;
+    /// get system time
+    fn get_system_percent(&self) -> f32;
+
 }
 
 /// Contains all the methods of the [`System`][crate::System] type.
