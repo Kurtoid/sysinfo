@@ -5,6 +5,7 @@
 //
 
 use crate::ProcessorExt;
+use crate::traits::CpuValues;
 
 /// Dummy struct that represents a processor.
 pub struct Processor {}
@@ -34,5 +35,9 @@ impl ProcessorExt for Processor {
 
     fn get_brand(&self) -> &str {
         ""
+    }
+
+    fn get_values(&self) -> CpuValues {
+        CpuValues::new()
     }
 }

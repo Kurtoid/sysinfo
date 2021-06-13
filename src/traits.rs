@@ -327,6 +327,109 @@ pub trait ProcessExt: Debug {
     /// Returns the number of seconds of CPU time used by this task
     fn total_runtime(&self) -> u64;
 }
+/// Struct containing values to compute a CPU usage.
+#[derive(Clone, Copy)]
+pub struct CpuValues {
+    user: u64,
+    nice: u64,
+    system: u64,
+    idle: u64,
+    iowait: u64,
+    irq: u64,
+    softirq: u64,
+    steal: u64,
+    _guest: u64,
+    _guest_nice: u64,
+}
+
+impl CpuValues {
+    /// Creates a new instance of `CpuValues` with everything set to `0`.
+    pub fn new() -> CpuValues {
+        CpuValues {
+            user: 0,
+            nice: 0,
+            system: 0,
+            idle: 0,
+            iowait: 0,
+            irq: 0,
+            softirq: 0,
+            steal: 0,
+            _guest: 0,
+            _guest_nice: 0,
+        }
+    }
+
+    /// Creates a new instance of `CpuValues` with everything set to the corresponding argument.
+    pub fn new_with_values(
+        user: u64,
+        nice: u64,
+        system: u64,
+        idle: u64,
+        iowait: u64,
+        irq: u64,
+        softirq: u64,
+        steal: u64,
+        guest: u64,
+        guest_nice: u64,
+    ) -> CpuValues {
+        CpuValues {
+            user,
+            nice,
+            system,
+            idle,
+            iowait,
+            irq,
+            softirq,
+            steal,
+            _guest: guest,
+            _guest_nice: guest_nice,
+        }
+    }
+
+    /*pub fn is_zero(&self) -> bool {
+        self.user == 0 && self.nice == 0 && self.system == 0 && self.idle == 0 &&
+        self.iowait == 0 && self.irq == 0 && self.softirq == 0 && self.steal == 0 &&
+        self.guest == 0 && self.guest_nice == 0
+    }*/
+
+    /// Sets the given argument to the corresponding fields.
+    pub fn set(
+        &mut self,
+        user: u64,
+        nice: u64,
+        system: u64,
+        idle: u64,
+        iowait: u64,
+        irq: u64,
+        softirq: u64,
+        steal: u64,
+        guest: u64,
+        guest_nice: u64,
+    ) {
+        self.user = user;
+        self.nice = nice;
+        self.system = system;
+        self.idle = idle;
+        self.iowait = iowait;
+        self.irq = irq;
+        self.softirq = softirq;
+        self.steal = steal;
+        self._guest = guest;
+        self._guest_nice = guest_nice;
+    }
+
+    /// Returns work time.
+    pub fn work_time(&self) -> u64 {
+        self.user + self.nice + self.system + self.irq + self.softirq + self.steal
+    }
+
+    /// Returns total time.
+    pub fn total_time(&self) -> u64 {
+        // `guest` is already included in `user`
+        // `guest_nice` is already included in `nice`
+        self.work_time() + self.idle + self.iowait
+    }
+}
 
 /// Contains all the methods of the [`Processor`][crate::Processor] struct.
 pub trait ProcessorExt: Debug {
@@ -392,6 +495,9 @@ pub trait ProcessorExt: Debug {
     /// }
     /// ```
     fn get_frequency(&self) -> u64;
+
+    /// get the raw values from the CPU. linux only, for now
+    fn get_cpu_values(&self) -> CpuValues;
 }
 
 /// Contains all the methods of the [`System`][crate::System] type.

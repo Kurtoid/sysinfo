@@ -95,22 +95,7 @@ macro_rules! sysinfo_debug {
 }
 
 cfg_if::cfg_if! {
-    if #[cfg(any(target_os = "macos", target_os = "ios"))] {
-        mod apple;
-        use apple as sys;
-        extern crate core_foundation_sys;
-
-        #[cfg(test)]
-        pub(crate) const MIN_USERS: usize = 1;
-    } else if #[cfg(windows)] {
-        mod windows;
-        use windows as sys;
-        extern crate winapi;
-        extern crate ntapi;
-
-        #[cfg(test)]
-        pub(crate) const MIN_USERS: usize = 1;
-    } else if #[cfg(any(target_os = "linux", target_os = "android"))] {
+    if #[cfg(any(target_os = "linux", target_os = "android"))] {
         mod linux;
         use linux as sys;
 
