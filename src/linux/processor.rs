@@ -118,7 +118,7 @@ impl ProcessorExt for Processor {
         &self.brand
     }
 
-    /// get the raw values from the CPU. linux only, for now
+    /// get a copy of the raw values from the CPU. linux only, for now
     fn get_cpu_values(&self) -> CpuValues{
         self.new_values
     }

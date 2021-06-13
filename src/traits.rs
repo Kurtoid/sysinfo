@@ -330,16 +330,16 @@ pub trait ProcessExt: Debug {
 /// Struct containing values to compute a CPU usage.
 #[derive(Clone, Copy)]
 pub struct CpuValues {
-    user: u64,
-    nice: u64,
-    system: u64,
-    idle: u64,
-    iowait: u64,
-    irq: u64,
-    softirq: u64,
-    steal: u64,
-    _guest: u64,
-    _guest_nice: u64,
+    pub user: u64,
+    pub nice: u64,
+    pub system: u64,
+    pub idle: u64,
+    pub iowait: u64,
+    pub irq: u64,
+    pub softirq: u64,
+    pub steal: u64,
+    pub _guest: u64,
+    pub _guest_nice: u64,
 }
 
 impl CpuValues {
