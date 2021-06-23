@@ -926,7 +926,7 @@ fn _get_process_data(
             let mut tmp = PathBuf::from(path);
             tmp.push("status");
             let mut file = File::open(tmp).map_err(|_| ())?;
-            let data = get_all_data_from_file(&mut file, 1024).map_err(|_| ())?;
+            let data = get_all_data_from_file(&mut file, 2048).map_err(|_| ())?;
             entry.status_file = check_nb_open_files(file);
             data
         };
