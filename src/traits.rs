@@ -326,6 +326,9 @@ pub trait ProcessExt: Debug {
 
     /// Returns the number of seconds of CPU time used by this task
     fn total_runtime(&self) -> u64;
+
+    /// amount of swap space consumed by this process (kB)
+    fn total_swap(&self) -> u64;
 }
 /// Struct containing values to compute a CPU usage.
 #[derive(Clone, Copy)]

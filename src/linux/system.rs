@@ -11,6 +11,7 @@ use crate::sys::processor::*;
 use crate::{Disk, LoadAvg, Networks, Pid, ProcessExt, RefreshKind, SystemExt, User};
 
 use libc::{self, c_char, gid_t, sysconf, uid_t, _SC_CLK_TCK, _SC_HOST_NAME_MAX, _SC_PAGESIZE};
+use regex::Regex;
 use std::cell::UnsafeCell;
 use std::collections::HashMap;
 use std::fs::{self, File};
@@ -698,7 +699,7 @@ fn update_time_and_memory(
         set_time(
             entry,
             u64::from_str(parts[13]).unwrap_or(0),
-            u64::from_str(parts[14]).unwrap_or(0)
+            u64::from_str(parts[14]).unwrap_or(0),
         );
         set_runtime(
             entry,
@@ -706,7 +707,6 @@ fn update_time_and_memory(
             u64::from_str(parts[14]).unwrap_or(0),
             clock_tick,
         )
-        
     }
     refresh_procs(entry, &path.join("task"), page_size_kb, pid, uptime, now);
 }
@@ -917,6 +917,21 @@ fn _get_process_data(
             clock_cycle,
         );
         update_process_disk_activity(entry, path);
+
+        // status file (for VmSwap)
+        // TODO: move things over to status file
+        let status_data = if let Some(ref mut f) = entry.status_file {
+            get_all_data_from_file(f, 1024).map_err(|_| ())?
+        } else {
+            let mut tmp = PathBuf::from(path);
+            tmp.push("status");
+            let mut file = File::open(tmp).map_err(|_| ())?;
+            let data = get_all_data_from_file(&mut file, 1024).map_err(|_| ())?;
+            entry.status_file = check_nb_open_files(file);
+            data
+        };
+        update_with_new_status_file(entry, status_data);
+
         return Ok((None, nb));
     }
 
@@ -1003,6 +1018,19 @@ fn _get_process_data(
     );
     update_process_disk_activity(&mut p, path);
     Ok((Some(p), nb))
+}
+
+fn update_with_new_status_file(entry: &mut Process, status_data: String) -> () {
+    // value is always in kB
+    let regex = Regex::new(r"VmSwap:\s+([0-9]+)").unwrap();
+    if entry.pid == 1 {
+        println!("{} {}", status_data, regex.is_match(&status_data));
+    }
+    let matches = regex.captures(&status_data);
+    if let Some(captures) = matches {
+        let vmswap: u64 = captures[1].parse().unwrap_or(0);
+        entry.total_swap = vmswap;
+    }
 }
 
 fn copy_from_file(entry: &Path) -> Vec<String> {

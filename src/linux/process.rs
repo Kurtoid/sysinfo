@@ -123,11 +123,13 @@ pub struct Process {
     /// Tasks run by this process.
     pub tasks: HashMap<Pid, Process>,
     pub(crate) stat_file: Option<File>,
+    pub(crate) status_file: Option<File>,
     old_read_bytes: u64,
     old_written_bytes: u64,
     read_bytes: u64,
     written_bytes: u64,
     total_runtime: u64,
+    pub(crate) total_swap: u64,
 }
 
 impl ProcessExt for Process {
@@ -159,11 +161,13 @@ impl ProcessExt for Process {
                 HashMap::new()
             },
             stat_file: None,
+            status_file: None,
             old_read_bytes: 0,
             old_written_bytes: 0,
             read_bytes: 0,
             written_bytes: 0,
             total_runtime: 0,
+            total_swap: 0,
         }
     }
 
@@ -271,6 +275,10 @@ impl ProcessExt for Process {
     // using https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat
     fn total_runtime(&self) -> u64 {
         self.total_runtime
+    }
+
+    fn total_swap(&self) -> u64 {
+        self.total_swap
     }
 }
 
