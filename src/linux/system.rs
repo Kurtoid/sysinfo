@@ -1023,9 +1023,6 @@ fn _get_process_data(
 fn update_with_new_status_file(entry: &mut Process, status_data: String) -> () {
     // value is always in kB
     let regex = Regex::new(r"VmSwap:\s+([0-9]+)").unwrap();
-    if entry.pid == 1 {
-        println!("{} {}", status_data, regex.is_match(&status_data));
-    }
     let matches = regex.captures(&status_data);
     if let Some(captures) = matches {
         let vmswap: u64 = captures[1].parse().unwrap_or(0);
